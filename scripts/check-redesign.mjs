@@ -6,4 +6,5 @@ for (const marker of ['Beginner', 'Intermediate', 'Advanced', 'Pilih Kelas', 'me
 assert.ok(!portal.includes("String(c.learningLevel||'').toLowerCase()===selectedLevel.toLowerCase()"), 'level choice must not hide purchasable courses');
 for (const marker of ['id="checkout-dialog"', 'Kode voucher (opsional)', "'/program/vouchers/redeem'", "if(!code)return pay(planId,button)"]) assert.ok(portal.includes(marker), `missing checkout voucher step: ${marker}`);
 for (const marker of ["e.status===401", "['dashboard','account','orders','program']", "b.disabled=!currentCourse?.accessible", "Alamat pembayaran tidak aman", "await loadSnap();const x=await req('/orders'", "await loadOrders();say('Selesaikan QRIS"]) assert.ok(portal.includes(marker), `missing portal hardening: ${marker}`);
-console.log('member dashboard source assertions: 20 passed');
+for (const marker of ["learningLevel:selectedLevel.toLowerCase()", "Verifikasi otomatis dijeda", "id=\"admin-attention\"", "/timeline", "Buat voucher gratis"]) assert.ok(source.includes(marker), `missing operations improvement: ${marker}`);
+console.log('member dashboard source assertions: 25 passed');
