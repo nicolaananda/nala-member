@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+const source=fs.readFileSync(new URL('../src/pages/portal.astro',import.meta.url),'utf8');
+const code=source.slice(source.indexOf('function openCourse('),source.indexOf('function openLesson('));
+const events=[],nodes=new Map();
+const node=()=>({dataset:{},append(){},prepend(){},replaceChildren(){}});
+const context={currentCourse:null,playerCleanup:()=>events.push('cleanup'),$:key=>{if(!nodes.has(key))nodes.set(key,node());return nodes.get(key)},el:node,show:()=>events.push('cleanup'),openLesson:lesson=>events.push(`track:${lesson.id}`)};
+vm.createContext(context);vm.runInContext(code,context);
+context.openCourse({accessible:true,chapters:[{title:'Bab',lessons:[{id:1,title:'Selesai',progress:{completed:true}},{id:2,title:'Lanjut',progress:{position:42}}]}]});
+assert.equal(events.at(-1),'track:2','View transition must precede starting player tracking');
+context.openCourse({accessible:true,chapters:[{title:'Bab',lessons:[{id:1,title:'Pertama'},{id:2,title:'Kedua'}]}]},2);
+assert.equal(events.at(-1),'track:2');
+console.log('PASS actual openCourse lifecycle and lesson resume');

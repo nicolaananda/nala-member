@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-
+import vm from 'node:vm';
 const source=await readFile(new URL('../src/pages/portal.astro',import.meta.url),'utf8');
-assert.match(source,/o\.status==='pending'.*Buat pembayaran baru/);
-assert.match(source,/Jangan bayar pesanan lama dan pesanan baru sekaligus/);
-assert.match(source,/pay\(plan\.id,fresh\)/);
-console.log('pending payment recovery check passed');
+const make=(tag,attrs={},text='')=>({...attrs,tag,text,children:[],append(...items){this.children.push(...items)},replaceChildren(){this.children=[]}});
+const root=make('root'),calls=[];const context={orders:[{order_id:'MEMBER-QA',status:'pending',amount:30000,duration_days:30,created_at:new Date().toISOString(),provider_redirect_url:'https://app.sandbox.midtrans.com/snap/v1/redirection/fixture'}],$:()=>root,el:make,confirm:()=>true,req:async(...x)=>calls.push(x),say(){},loadOrders:async()=>{}};
+vm.createContext(context);vm.runInContext(source.slice(source.indexOf('function renderOrders'),source.indexOf('function startPolling'))+';renderOrders()',context);
+const row=root.children[0],cancel=row.children.find(x=>x.text==='Batalkan');assert.ok(cancel);assert.equal(row.children.filter(x=>x.text==='Buat pembayaran baru').length,0);await cancel.onclick();assert.equal(calls[0][0],'/orders/MEMBER-QA/cancel');assert.equal(JSON.parse(calls[0][1].body).confirm,true);assert.equal(cancel.disabled,false);
+context.orders[0].status='paid';vm.runInContext('renderOrders()',context);assert.equal(root.children[0].children.some(x=>x.text==='Batalkan'),false);
+console.log('PASS pending cancellation before replacement; paid order has no cancellation action');
