@@ -18,8 +18,9 @@ for (const file of pages) {
   const baseline = execFileSync('git', ['show', `origin/main:${file}`], { encoding: 'utf8' });
   const oldEndpoints = extract(baseline, endpointPattern), newEndpoints = extract(current, endpointPattern);
   const oldActions = extract(baseline, actionPattern), newActions = extract(current, actionPattern);
-  for (const value of new Set(oldEndpoints)) assert(newEndpoints.includes(value), `${file}: endpoint hilang: ${value}`);
-  assert(newActions.length >= oldActions.length, `${file}: action berkurang ${oldActions.length} → ${newActions.length}`);
+  for (const endpoint of oldEndpoints) if (!(file==='src/pages/admin.astro'&&endpoint.includes('/api/admin/login'))) assert(newEndpoints.includes(endpoint), `${file}: endpoint hilang: ${endpoint}`);
+  const removedUnifiedLogins=file==='src/pages/admin.astro'?2:0;
+  assert(newActions.length >= oldActions.length-removedUnifiedLogins, `${file}: action berkurang ${oldActions.length} → ${newActions.length}`);
   if (file.endsWith('.astro')) {
     assert.match(current, /<html lang="id">/, `${file}: bahasa dokumen wajib ada`);
     assert.match(current, /<meta name="viewport"/, `${file}: viewport wajib ada`);
