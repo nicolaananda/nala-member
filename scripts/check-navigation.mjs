@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+const read=name=>readFile(new URL(`../${name}`,import.meta.url),'utf8');
+const [admin,portal,css]=await Promise.all([read('src/pages/admin.astro'),read('src/pages/portal.astro'),read('src/styles.css')]);
+assert.match(admin,/<details class="admin-menu">[\s\S]*?<nav class="nav" aria-label="Admin">/,'admin mobile menu must retain current markup');
+assert.match(admin,/e\.key==='Escape'&&menu\.open[\s\S]*?querySelector\('summary'\)\.focus/,'admin menu must close and restore focus on Escape');
+assert.match(admin,/operations-link'\)\.classList\.toggle\('hidden',teacher\)/,'teacher must not see owner operations');
+assert.match(portal,/<aside class="learning-sidebar" aria-label="Navigasi belajar">[\s\S]*?data-view="discover"/,'desktop portal navigation must include discover');
+assert.match(portal,/<nav class="mobile-learning-nav" aria-label="Navigasi mobile">[\s\S]*?data-view="discover"[\s\S]*?data-view="orders"/,'mobile portal navigation must include deep-link views');
+const routeLists=portal.match(/\['dashboard','discover','catalog','account','orders','program'\]/g)||[];
+assert.ok(routeLists.length>=2,'bootstrap and popstate route lists must include discover');
+assert.match(portal,/querySelectorAll\('\[data-view\]'\)[\s\S]*?aria-current/,'all portal navigation instances must receive active state');
+assert.match(css,/@media \(min-width:360px\) and \(max-width:915px\)[\s\S]*?\.admin-shell \.site-header\{position:sticky[\s\S]*?\.admin-shell \.nav\{display:flex/,'admin navigation must remain available from 800–915px');
+assert.match(css,/\.site-header \.nav\{[^}]*overflow-x:auto/,'intermediate navigation must allow horizontal overflow');
+assert.match(css,/\.mobile-learning-nav\{[^}]*overflow-x:auto/,'mobile portal navigation must contain overflow');
+assert.doesNotMatch(admin+portal+css,/<<<<<<<|=======|>>>>>>>/,'conflict markers must be removed');
+console.log('PASS navigation structure, roles, routes, active state, Escape focus, breakpoints, and overflow');
