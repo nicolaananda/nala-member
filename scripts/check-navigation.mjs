@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const read=name=>readFile(new URL(`../${name}`,import.meta.url),'utf8');
 const [admin,portal,css]=await Promise.all([read('src/pages/admin.astro'),read('src/pages/portal.astro'),read('src/styles.css')]);
-assert.match(admin,/<details class="admin-menu">[\s\S]*?<nav class="nav" aria-label="Admin">/,'admin mobile menu must retain current markup');
+assert.match(admin,/<details class="admin-menu" open>[\s\S]*?<nav class="nav" aria-label="Admin">/,'admin navigation must render before auth and remain a mobile disclosure');
 assert.match(admin,/e\.key==='Escape'&&menu\.open[\s\S]*?querySelector\('summary'\)\.focus/,'admin menu must close and restore focus on Escape');
 assert.match(admin,/operations-link'\)\.classList\.toggle\('hidden',teacher\)/,'teacher must not see owner operations');
 assert.match(portal,/<aside class="learning-sidebar" aria-label="Navigasi belajar">[\s\S]*?data-view="discover"/,'desktop portal navigation must include discover');

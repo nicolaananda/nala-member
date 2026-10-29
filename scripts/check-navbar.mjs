@@ -1,10 +1,14 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
+const admin = readFileSync(new URL('../src/pages/admin.astro', import.meta.url), 'utf8');
 assert.match(css, /\.admin-shell \.header-inner,\.learner-shell \.header-inner\{min-height:56px;display:flex;padding-top:0\}/);
 assert.match(css, /\.admin-shell \.brand img,\.learner-shell \.brand img\{width:72px;height:auto\}/);
 assert.match(css, /\.learner-shell \.header-inner\{min-height:64px\}/);
 assert.match(css, /\.nav button\{min-height:44px\}/);
 assert.match(css, /padding-bottom:6rem/);
 assert.match(css, /padding-bottom:max\(\.35rem,env\(safe-area-inset-bottom\)\)/);
+assert.match(admin, /<details class="admin-menu" open>/, 'desktop admin navigation must render open before authentication');
+assert.match(admin, /if\(mobileMenu\.matches\)adminMenu\.removeAttribute\('open'\)/, 'mobile navigation must start collapsed');
+assert.match(admin, /toggleAttribute\('open',!event\.matches\)/, 'navigation must follow the 799px responsive breakpoint');
 console.log('navbar contracts OK');
