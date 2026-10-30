@@ -6,8 +6,9 @@ assert.match(admin,/<details class="admin-menu" open>[\s\S]*?<nav class="nav" ar
 assert.match(admin,/e\.key==='Escape'&&menu\.open[\s\S]*?querySelector\('summary'\)\.focus/,'admin menu must close and restore focus on Escape');
 assert.match(admin,/operations-link'\)\.classList\.toggle\('hidden',teacher\)/,'teacher must not see owner operations');
 assert.match(portal,/<aside class="learning-sidebar" aria-label="Navigasi belajar">[\s\S]*?data-view="discover"/,'desktop portal navigation must include discover');
-assert.match(portal,/<nav class="mobile-learning-nav" aria-label="Navigasi mobile">[\s\S]*?data-view="discover"[\s\S]*?data-view="orders"/,'mobile portal navigation must include deep-link views');
-const routeLists=portal.match(/\['dashboard','discover','catalog','account','orders','program'\]/g)||[];
+assert.match(portal,/<nav class="mobile-learning-nav" aria-label="Navigasi utama mobile">[\s\S]*?data-view="discover"[\s\S]*?data-view="rewards"[\s\S]*?data-view="account"/,'mobile portal navigation must preserve six primary views');
+assert.match(portal,/account-orders" data-view="orders"/,'orders must remain under account');
+const routeLists=portal.match(/\['dashboard','discover','catalog','account','orders','rewards','program'\]/g)||[];
 assert.ok(routeLists.length>=2,'bootstrap and popstate route lists must include discover');
 assert.match(portal,/querySelectorAll\('\[data-view\]'\)[\s\S]*?aria-current/,'all portal navigation instances must receive active state');
 assert.match(css,/@media \(min-width:360px\) and \(max-width:915px\)[\s\S]*?\.admin-shell \.site-header\{position:sticky[\s\S]*?\.admin-shell \.nav\{display:flex/,'admin navigation must remain available from 800–915px');
