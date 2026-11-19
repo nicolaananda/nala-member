@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+const source=readFileSync(new URL('../src/pages/admin.astro',import.meta.url),'utf8');
+assert.match(source,/id="reward-photo"[^>]*type="file"/);
+assert.match(source,/id="reward-photo-preview"/);
+assert.match(source,/id="remove-reward-photo"/);
+assert.match(source,/course-thumbnails/);
+assert.match(source,/await uploadRewardPhoto\(\)/);
+assert.match(source,/syncRewardPhoto\(\)/);
+new vm.Script(source.match(/<script[^>]*>([\s\S]*?)<\/script>/)[1].replace(/^import .*;$/gm,''));
+console.log('Reward photo controls, upload-before-save, preview sync and JavaScript syntax OK');
