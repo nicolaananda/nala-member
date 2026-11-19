@@ -65,3 +65,26 @@ body,.learner-shell{background:hsl(var(--background));color:hsl(var(--foreground
 .learning-sidebar,.auth-context,.gallery-hero,.learning-flow,.mobile-learning-nav{background:#2b2118}.learning-sidebar button[aria-current=page],.learning-sidebar button:hover{background:#ffd36e;color:#2b2118}.admin-shell{--admin-ink:#2b2118;--admin-paper:#fffdf8;--admin-canvas:#fff8ef;--admin-line:hsl(var(--border));--admin-accent:#ff8db3;--admin-accent-soft:#ffc1d6;background:#fff8ef}.admin-shell .site-header,.admin-shell .admin-menu[open]>.nav{background:#2b2118}.admin-shell .nav a:hover,.admin-shell .nav button:hover,.admin-shell .nav button[aria-current=page]{background:#ffd36e;color:#2b2118}.admin-shell .filters,.admin-shell .evaluation-controls{background:#ffe29a}.kpi-card:nth-child(2n){background:#b7f7d1}.kpi-card:nth-child(3n){background:#ffc1d6}.ops-tabs button[aria-selected=true]{border-color:#ff8db3}
 input,select,textarea{border-color:hsl(var(--input))}:focus-visible{outline-color:#2b2118}.learner-shell button:focus-visible,.learner-shell summary:focus-visible{outline-color:#2b2118}
 .reward-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}.reward-card{display:grid;gap:.75rem}.reward-card img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius)}
+
+/* Nala application polish: scoped to operational and learner shells. */
+:is(.learner-shell,.admin-shell) [hidden]{display:none!important}
+:is(.learner-shell,.admin-shell) :is(button,.button,input:not([type=checkbox]):not([type=radio]),select,summary){min-height:44px}
+:is(.learner-shell,.admin-shell) :focus-visible{outline:3px solid #8b4266;outline-offset:3px}
+:is(.learner-shell,.admin-shell) :is(input,select,textarea){max-width:100%;font-size:16px}
+:is(.learner-shell,.admin-shell) :is(.card,.ops-row,.field,.course-body){min-width:0;overflow-wrap:anywhere}
+.learner-shell .reward-card{display:flex;flex-direction:column;gap:12px}
+.learner-shell .reward-card>img{width:100%;height:auto;aspect-ratio:1;object-fit:contain;background:#faf4ee;border-radius:14px}
+.learner-shell .reward-card>button{margin-top:auto}
+.admin-shell .reward-admin-thumbnail{width:72px;height:72px;object-fit:contain;border-radius:12px;background:#faf4ee;flex-shrink:0}
+.admin-shell .reward-tabs{margin-bottom:20px;flex-wrap:wrap}
+.admin-shell .reward-tabs [aria-pressed=true]{background:#66384c;color:white}
+.admin-shell #reward-form>.form-actions{position:sticky;bottom:12px;padding:12px;background:#fffaf5;border:1px solid #dfd0c8;border-radius:12px;z-index:2}
+.learner-shell :is(.dashboard-actions,.lesson-navigation){display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:18px;background:#fff6eb;border:1px solid #e8d8ca;border-radius:16px;margin-bottom:20px}
+.learner-shell .dashboard-actions{grid-column:1/-1}
+.learner-shell .lesson-navigation{margin-top:24px}
+.learner-shell .lesson-button.active{border:2px solid #8b4266;background:#f8edf1}
+:is(.learner-shell,.admin-shell) .muted{color:#665b55}
+:is(.learner-shell,.admin-shell) progress{accent-color:#8b4266;max-width:100%}
+:is(.learner-shell,.admin-shell) .message.error{color:#852636;background:#fff0f1}
+@media(max-width:600px){.admin-shell .reward-tabs>*{flex:1}.admin-shell .ops-row{flex-wrap:wrap}.learner-shell .lesson-navigation>button{flex:1}.learner-shell .dashboard-actions>button{width:100%}:is(.learner-shell,.admin-shell) dialog{max-width:calc(100vw - 24px)}.admin-shell #reward-form>.form-actions{bottom:calc(12px + env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){:is(.learner-shell,.admin-shell) *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
